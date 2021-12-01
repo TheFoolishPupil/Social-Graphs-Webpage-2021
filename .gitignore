@@ -1,3 +1,6 @@
 .vscode/
 soga.sublime-project
+soga.sublime-workspace
 .python-version
+
+__pycache__/
