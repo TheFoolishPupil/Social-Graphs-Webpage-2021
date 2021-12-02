@@ -1,5 +1,5 @@
 import streamlit as st
-from data import FILM_DATA, FILM_NETWORK
+from data import FILM_DATA, FILM_NETWORK, box_office_histogram
 
 
 def data_analysis():
@@ -14,21 +14,19 @@ def data_analysis():
         "tokenization is also present."
     )
     selected_attributes = st.multiselect(
-        "Show/hide film attributes",
+        "Select film attributes",
+        FILM_DATA.columns.values,
         [
-            "Tokens",
-            "Unique Tokens",
-            "Plot",
-            "Actors",
-            "Directors",
-            "Producers",
-            "Writers",
-            "Box Office",
+            FILM_DATA.columns.values[0],
+            FILM_DATA.columns.values[2],
+            FILM_DATA.columns.values[3],
         ],
-        ["Actors"],
     )
-    st.write(FILM_DATA)
+    st.write(FILM_DATA[selected_attributes])
     st.write("## Summary Statistics")
+    bin_size = st.slider("Bin Size", 9000000, 110000000)
+    fig = box_office_histogram(bin_size)
+    st.plotly_chart(fig, use_container_width=True)
 
 
 def network_visualization():
