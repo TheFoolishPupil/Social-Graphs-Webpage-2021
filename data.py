@@ -1,9 +1,10 @@
+import streamlit as st
 import pandas as pd
 import networkx as nx
-import math
 import plotly.figure_factory as ff
 
 
+@st.cache
 def build_network():
     G = nx.Graph()
     for movie in FILM_DATA.T.iteritems():
@@ -11,16 +12,11 @@ def build_network():
     return G
 
 
-def box_office_histogram(bin_size):
-    hist_data = [
-        [
-            int(float(x))
-            for x in list(FILM_DATA.box_office)
-            if x != "None" and not math.isnan(float(x))
-        ]
-    ]  # TODO: Data should be processed before this point
+@st.cache
+def box_office_histogram():
+    hist_data = [list(FILM_DATA.box_office)]
     labels = ["Box Office Revenue"]
-    return ff.create_distplot(hist_data, labels, [bin_size])
+    return ff.create_distplot(hist_data, labels, [9000000])
 
 
 FILM_DATA = pd.read_csv("dataset.csv").iloc[:, 1:]

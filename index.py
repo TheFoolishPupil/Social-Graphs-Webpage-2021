@@ -24,8 +24,7 @@ def data_analysis():
     )
     st.write(FILM_DATA[selected_attributes])
     st.write("## Summary Statistics")
-    bin_size = st.slider("Bin Size", 9000000, 110000000)
-    fig = box_office_histogram(bin_size)
+    fig = box_office_histogram()
     st.plotly_chart(fig, use_container_width=True)
 
 
