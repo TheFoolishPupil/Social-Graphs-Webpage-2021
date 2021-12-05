@@ -4,18 +4,12 @@ import ast
 import numpy as np
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+from constants import BOX_OFFICE_GROUPS
 
 
 with open("data/movie_plots", "rb") as f:
     movie_plots = pickle.load(f)
 
-box_office_groups = [
-    "very low box office",
-    "low box office",
-    "medium box office",
-    "high box office",
-    "very high box office",
-]
 temp = list(set(movie_plots["genres"].values))
 movie_genres = [
     value for sublist in temp for value in ast.literal_eval(sublist)
@@ -109,7 +103,7 @@ def plot_sentiment_scores_by_box_office_group(
         cols=1,
         shared_xaxes=True,
     )
-    for i, group in enumerate(box_office_groups):
+    for i, group in enumerate(BOX_OFFICE_GROUPS):
         j = 1
         temp_df = movie_plots[movie_plots.bo_groups == group]
 

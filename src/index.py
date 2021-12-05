@@ -1,9 +1,18 @@
 import streamlit as st
-from wordclouds import render_word_clouds
 from constants import (
     FILM_DATA,
-    FILM_NETWORK,
 )
+from data import (
+    average_number_of,
+    box_office_histogram,
+)
+from network import (
+    network_degree_distribution,
+    network_degree_distribution_by_box_office,
+    network_degree_distribution_by_genre,
+    network_degree_distribution_by_community,
+)
+from wordclouds import render_word_clouds
 from communities import (
     community_size_distribution_graph,
     community_box_office_histogram,
@@ -12,10 +21,6 @@ from sentiment import (
     plot_sentiment_scores_by_box_office_group,
     plot_sentiment_scores_by_genre,
     plot_compound_scores,
-)
-from data import (
-    average_number_of,
-    box_office_histogram,
 )
 
 
@@ -64,7 +69,11 @@ def network_visualization():
     """Defines what should be shown on the network visualization page."""
 
     "# Network Visualization and Degree Distribution"
-    FILM_NETWORK
+    st.plotly_chart(network_degree_distribution(type="film"))
+    st.plotly_chart(network_degree_distribution(type="actor"))
+    st.plotly_chart(network_degree_distribution_by_box_office())
+    st.plotly_chart(network_degree_distribution_by_genre())
+    st.plotly_chart(network_degree_distribution_by_community())
 
 
 def word_clouds_and_communities():
