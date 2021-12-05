@@ -2,5 +2,6 @@
 soga.sublime-project
 soga.sublime-workspace
 .python-version
+.DS_Store
 
 __pycache__/

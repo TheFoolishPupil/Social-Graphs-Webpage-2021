@@ -14,4 +14,4 @@ pip install -r requirements.txt
 
 ## Running the app
 
-You can run the app with `streamlit run index.py`
+You can run the app with `streamlit run src/index.py`
