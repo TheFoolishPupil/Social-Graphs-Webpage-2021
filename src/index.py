@@ -2,10 +2,7 @@ import streamlit as st
 from constants import (
     FILM_DATA,
 )
-from data import (
-    average_number_of,
-    box_office_histogram
-)
+from data import average_number_of, box_office_histogram
 from network import (
     network_degree_distribution,
     network_degree_distribution_by_box_office,
@@ -16,7 +13,7 @@ from wordclouds import render_word_clouds
 from communities import (
     community_size_distribution_graph,
     community_box_office_histogram,
-    community_box_office_barchart
+    community_box_office_barchart,
 )
 from sentiment import (
     plot_sentiment_scores_by_box_office_group,

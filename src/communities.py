@@ -8,7 +8,7 @@ from constants import FILM_DATA, FILM_NETWORK_COMMUNITY
 
 
 partition = community_louvain.best_partition(FILM_NETWORK_COMMUNITY)
-
+print("COMMMS!")
 communities = {}
 for key, value in sorted(partition.items()):
     communities.setdefault(value, []).append(key)
@@ -27,11 +27,18 @@ for com in communities:
     temp_degree_dict = {}
     for character in communities[com]:
         film = FILM_DATA[FILM_DATA["link"] == character]
-        title = character if film.empty else FILM_DATA[FILM_DATA["link"] == character].title.values[0]
+        title = (
+            character
+            if film.empty
+            else FILM_DATA[FILM_DATA["link"] == character].title.values[0]
+        )
 
         temp_degree_dict[title] = FILM_NETWORK_COMMUNITY.degree[character]
 
-    community_names[com] = sorted(temp_degree_dict, key=temp_degree_dict.get, reverse=True)[:3]
+    community_names[com] = sorted(
+        temp_degree_dict, key=temp_degree_dict.get, reverse=True
+    )[:3]
+
 
 @st.cache
 def community_box_office_histogram():
@@ -51,7 +58,8 @@ def community_box_office_histogram():
         counter += 1
     return fig
 
-@st.cache
+
+@st.cache(allow_output_mutation=True)
 def community_box_office_barchart():
     """Returns a bar chart of the total box office distribution for each genre"""
 
@@ -61,52 +69,52 @@ def community_box_office_barchart():
 
         for title in values:
             try:
-                box_office_sum = box_office_sum + FILM_DATA[FILM_DATA["link"] == title].box_office.values[0]
-            except:
-                continue
+                box_office_sum = (
+                    box_office_sum
+                    + FILM_DATA[FILM_DATA["link"] == title].box_office.values[
+                        0
+                    ]
+                )
+            except IndexError as e:
+                print(e)
 
-        box_office_sums[index] = box_office_sum/ len(values)
+        box_office_sums[index] = box_office_sum / len(values)
 
     community_size_bar_chart_data = {
         "Total Box Office": list(box_office_sums.values()),
         "Community Number": list(box_office_sums.keys()),
-        "Top Movies": list(community_names.values())
+        "Top Movies": list(community_names.values()),
     }
 
-    color_discrete_sequence = ["#636efa"]*len(communities)
+    color_discrete_sequence = ["#636efa"] * len(communities)
     for index in largest_communities:
         bar_index = list(communities.keys()).index(index)
         color_discrete_sequence[bar_index] = "#ffa15a"
 
     fig = px.bar(
         community_size_bar_chart_data,
-        hover_data = ["Community Number", "Total Box Office", "Top Movies"],
+        hover_data=["Community Number", "Total Box Office", "Top Movies"],
         title="Communities Total Box Office",
         x="Community Number",
         y="Total Box Office",
-        height=400
+        height=400,
     ).update_traces(marker=dict(color=color_discrete_sequence))
 
     return fig
 
-@st.cache
+
+@st.cache(allow_output_mutation=True)
 def community_size_distribution_graph():
     """Returns a figure object for the community size distribution graph."""
-
-    community_sizes = {}
-    for k in sorted(
-        communities, key=lambda k: len(communities[k]), reverse=True
-    ):
-        community_sizes[k] = len(communities[k])
 
     community_size_bar_chart_data = {
         "Community Size": list(community_sizes.values()),
         "Community Number": list(community_sizes.keys()),
-        "Top Movies": list(community_names.values())
+        "Top Movies": list(community_names.values()),
     }
     fig = px.bar(
         community_size_bar_chart_data,
-        hover_data = ["Community Number", "Community Size", "Top Movies"],
+        hover_data=["Community Number", "Community Size", "Top Movies"],
         title="Community Sizes",
         x="Community Number",
         y="Community Size",
