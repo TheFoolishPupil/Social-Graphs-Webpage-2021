@@ -16,6 +16,7 @@ from wordclouds import render_word_clouds
 from communities import (
     community_size_distribution_graph,
     community_box_office_histogram,
+    community_box_office_barchart
 )
 from sentiment import (
     plot_sentiment_scores_by_box_office_group,
@@ -131,8 +132,13 @@ def word_clouds_and_communities():
     csd_graph = community_size_distribution_graph()
     st.plotly_chart(csd_graph)
 
+    cbo_barchart = community_box_office_barchart()
+    st.plotly_chart(cbo_barchart)
+
     cbo_histogram = community_box_office_histogram()
     st.plotly_chart(cbo_histogram)
+
+
 
 
 def sentiment_analysis():
