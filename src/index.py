@@ -6,6 +6,10 @@ from network import (
     network_degree_distribution_by_box_office,
     network_degree_distribution_by_genre,
     network_degree_distribution_by_community,
+    render_actor_distribution_text,
+    render_movie_distribution_text,
+    render_box_office_distribution_text,
+    render_genre_distribution_text
 )
 from wordclouds import (
     render_word_clouds,
@@ -111,11 +115,21 @@ def data_analysis():
 def network_visualization():
     """Defines what should be shown on the network visualization page."""
 
-    "# Network Visualization and Degree Distribution"
+    "# Network Analysis"
+
+    "## Degree Distributions"
     st.plotly_chart(network_degree_distribution(type="film"))
+    render_movie_distribution_text()
+
     st.plotly_chart(network_degree_distribution(type="actor"))
+    render_actor_distribution_text()
+
     st.plotly_chart(network_degree_distribution_by_box_office())
+    render_box_office_distribution_text()
+
     st.plotly_chart(network_degree_distribution_by_genre())
+    render_genre_distribution_text()
+
     st.plotly_chart(network_degree_distribution_by_community())
 
 
