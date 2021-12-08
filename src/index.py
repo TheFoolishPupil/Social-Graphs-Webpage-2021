@@ -273,6 +273,8 @@ def main():
         data=FILM_DATA.to_csv().encode("utf-8"),
         file_name="movie_dataset.csv",
     )
+    link = "[Notebook](https://colab.research.google.com/drive/1kB3vDGY3Js_ex5OzXbJN9jb7qjJTkaoM?usp=sharing)"
+    st.sidebar.markdown(link, unsafe_allow_html=True)
     if page == "Introduction":
         introduction()
 
