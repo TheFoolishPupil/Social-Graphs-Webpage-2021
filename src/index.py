@@ -9,7 +9,13 @@ from network import (
     render_actor_distribution_text,
     render_movie_distribution_text,
     render_box_office_distribution_text,
-    render_genre_distribution_text
+    render_genre_distribution_text,
+    degree_distribution_comparison,
+    render_degree_distribution_comparison_text,
+    degree_centrality,
+    render_degree_centrality_text,
+    top_movies_degree_centrality,
+    additional_statistics
 )
 from wordclouds import (
     render_word_clouds,
@@ -132,7 +138,19 @@ def network_visualization():
 
     st.plotly_chart(network_degree_distribution_by_community())
 
+    "# Comparison to network models"
+    st.plotly_chart(degree_distribution_comparison())
+    render_degree_distribution_comparison_text()
 
+    "## Degree Centrality"
+    st.write(degree_centrality())
+    render_degree_centrality_text()
+
+    "### 5 most central movies for each genre according to degree centrality"
+    st.write(top_movies_degree_centrality())
+
+    "## Additional Statistics"
+    additional_statistics()
 def word_clouds():
     """Defines what should be shown on the natural language processing page."""
 
@@ -233,7 +251,7 @@ def main():
         [
             "Introduction",
             "Data Analysis",
-            "Network Visualization",
+            "Network Analysis",
             "Text Analysis",
             "Communities Analysis",
             "Sentiment Analysis",
@@ -250,7 +268,7 @@ def main():
     if page == "Data Analysis":
         data_analysis()
 
-    if page == "Network Visualization":
+    if page == "Network Analysis":
         network_visualization()
 
     if page == "Text Analysis":

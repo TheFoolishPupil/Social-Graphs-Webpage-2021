@@ -4,7 +4,9 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from constants import ACTOR_NETWORK, FILM_NETWORK, BOX_OFFICE_GROUPS, FILM_DATA
-
+import networkx as nx
+import random
+import pandas as pd
 
 temp = list(set(FILM_DATA["genres"].values))
 movie_genres = [
@@ -112,7 +114,6 @@ def network_degree_distribution_by_genre():
     )
     return fig
 
-
 @st.cache
 def network_degree_distribution_by_community():
     community_list = list(set(FILM_DATA["community"].values))
@@ -141,6 +142,84 @@ def network_degree_distribution_by_community():
         height=600,
     )
     return fig
+
+def add_new_nodes(network, amount):
+    edge_list = flat_edge_list(network)
+    next_node = max(edge_list) + 1
+    network.add_edge(random.choice(edge_list), next_node)
+    next_node += 1
+
+    for i in range(amount-1):
+        edge_list = flat_edge_list(network)
+        network.add_edge(random.choice(edge_list), next_node)
+        next_node += 1
+
+    return network
+
+def flat_edge_list(network):
+
+    edge_list = []
+
+    for n1,n2 in list(network.edges()):
+        edge_list.append(n1)
+        edge_list.append(n2)
+
+    return edge_list
+
+@st.cache
+def degree_distribution_comparison():
+    #Create a list of network names and a list of their respective degree distributions
+    types = ['Movie Network','Barabasi-Albert Network','Watts Strogatz Network','Erdős-Rényi Network']
+    degree_distributions = []
+
+    #We get the degree distribution of our movie network and add it to the list
+    degree_distribution_movies = [FILM_NETWORK.degree(n) for n in FILM_NETWORK.nodes()]
+    degree_distributions.append(degree_distribution_movies)
+
+    #We get the degree distribution of a Barabasi-Albert network with the same amount of nodes.
+    #The distribution is added to the list
+    BA = nx.Graph()
+    BA.add_edge(1,2)
+    BA = add_new_nodes(BA,712)
+    degree_distribution = [BA.degree(n) for n in BA.nodes()]
+    degree_distributions.append(degree_distribution)
+
+    #We get the degree distribution for the Watts Strogatz network with the same amount of nodes.
+    #The distribution is added to the list
+    degree_distribution = [FILM_NETWORK.degree(n) for n in FILM_NETWORK.nodes()]
+    avg_k = sum(degree_distribution)/len(degree_distribution)
+    p = avg_k/(len(list(FILM_NETWORK.nodes())))
+    WSG = nx.watts_strogatz_graph(n=713, k=int(avg_k), p=p)
+    WSG_degree_distribution = [WSG.degree(n) for n in WSG.nodes()]
+    degree_distributions.append(WSG_degree_distribution)
+
+    #We get the degree distribution of the Erdős-Rényi network with the same amount of nodes.
+    #The distribution is added to the list
+    ER = nx.gnp_random_graph(713,p)
+    degree_distribution = [ER.degree(n) for n in ER.nodes()]
+    degree_distributions.append(degree_distribution)
+
+    fig = make_subplots(rows=4, cols=1, shared_xaxes=True, shared_yaxes=True)
+
+    for i, distribution in enumerate(degree_distributions):
+
+        b = (i%2) +1
+        a = (i//2) +1
+        hist, bins = np.histogram(distribution, bins = np.arange(max(distribution)+1))
+        fig.add_trace(go.Bar(x=bins[:-1], y=hist,name=types[i]),i+1,1)
+
+    fig.update_xaxes(title_text="Degree", row = i+1, col = 1)
+    fig.update_yaxes(title_text="Frequency", row = 1, col = 1)
+    fig.update_layout(title_text="Degree distributions for different networks")
+
+    return fig
+
+def render_degree_distribution_comparison_text():
+    st.write(f"The degree distribution of the movie network is compared to the degree distributions"
+    " of other networks. These networks were produced with the same amount of nodes and similar statistics"
+    " to our movie network. If they were similar we could use some of the properties of the respective "
+    " network. However, this is not really the case. The most similar degree distribution is that of the "
+    " Erdos-Renyi network, but they are still very different.")
 
 def render_actor_distribution_text():
     st.write(f"The most frequently occuring degree value for the actor network is **7**.This value makes"
@@ -227,3 +306,102 @@ def render_genre_distribution_text():
         " widely used. This can be seen here again where **16** of the movies have **0** "
         " connections. Otherwise, adventure, sci-fi and crime movies seem to have more popular"
         " cast members.")
+
+def degree_centrality():
+    df_centrality = pd.DataFrame()
+
+    # Find the 5 most central movies according to degree centrality.
+    movie_degree_centrality = nx.degree_centrality(FILM_NETWORK)
+    sortedDict = dict(sorted(movie_degree_centrality.items(), key=lambda x: x[1], reverse=True)[:5])
+    sortedDict = {k: round(v, 4) for k, v in sortedDict.items()}
+    df_centrality['Degree Centrality'] = sortedDict.keys()
+    df_centrality['Degree Centrality Value'] = sortedDict.values()
+
+    # Find the 5 most central movies according to betweenness centrality.
+    movie_betweeness_centrality = nx.betweenness_centrality(FILM_NETWORK, endpoints=True)
+    sortedDict = dict(sorted(movie_betweeness_centrality.items(), key=lambda x: x[1], reverse=True)[:5])
+    sortedDict = {k: round(v, 4) for k, v in sortedDict.items()}
+    df_centrality['Betweenness Centrality'] = sortedDict.keys()
+    df_centrality['Betweenness Centrality Value'] = sortedDict.values()
+
+    # Find the 5 most central characters according to eigenvector centrality.
+    movie_eigenvector_centrality = nx.eigenvector_centrality(FILM_NETWORK)
+    sortedDict = dict(sorted(movie_eigenvector_centrality.items(), key=lambda x: x[1], reverse=True)[:5])
+    sortedDict = {k: round(v, 4) for k, v in sortedDict.items()}
+    df_centrality['Eigenvector Centrality'] = sortedDict.keys()
+    df_centrality['Eigenvector Centrality Value'] = sortedDict.values()
+
+    return df_centrality
+
+
+def top_movies_degree_centrality():
+    df_centrality_genres = pd.DataFrame()
+    movie_degree_centrality = nx.degree_centrality(FILM_NETWORK)
+
+    # Find the 5 most central movies for each genre according to degree centrality.
+    for i,genre in enumerate(genre_list):
+        genre_nodes = [x for x,y in FILM_NETWORK.nodes(data=True) if genre in y['genre']]
+        genre_movie_degree_centrality = { key: movie_degree_centrality[key] for key in genre_nodes}
+
+        sortedDict = dict(sorted(genre_movie_degree_centrality.items(), key=lambda x: x[1], reverse=True)[:5])
+        sortedDict = {k: round(v, 4) for k, v in sortedDict.items()}
+        df_centrality_genres[genre] = sortedDict.keys()
+        df_centrality_genres['value'] = sortedDict.values()
+
+        df_centrality_genres[genre] = df_centrality_genres[genre] + ' : ' +  df_centrality_genres["value"].astype(str)
+
+    df_centrality_genres.drop(['value'], axis=1).to_csv("genre_centrality")
+    df_centrality_genres.drop(['value'], axis=1)
+
+    return df_centrality_genres
+
+
+def render_degree_centrality_text():
+    st.write(f"Some of the text is from https://cambridge-intelligence.com/keylines-faqs-social-network-analysis/")
+    st.text("")
+
+    st.write(f"**Degree centrality**")
+    st.text("")
+
+    st.write(f"Definition: Degree centrality assigns an importance score based simply on the number of links held by each node.")
+    st.write(f"What it tells us: How many direct, ‘one hop’ connections each node has to other nodes in the network."
+    "This matches the previously seen movies that have widely used cast members.")
+    st.text("")
+
+
+    st.write(f"**Betweenness centrality**")
+    st.text("")
+
+    st.write(f"Definition: Betweenness centrality measures the number of times a node lies on the shortest path between other nodes.")
+    st.write(f"What it tells us: This measure shows which nodes are ‘bridges’ between nodes in a network. It does this by identifying all the"
+    " shortest paths and then counting how many times each node falls on one.")
+    st.text("")
+
+    st.write(f"Some of the values changed here. Marvel movies still remain in the top 5. However, a movie we haven't seen before appears"
+      "here *Valentine's Day*. This movie does have an impressive cast - Julia Robert, Jennifer Garner, Ashton Kutcher and so on. What this"
+      "could mean is that the cast appears is quite popular but appears in many different categories/types of movies. So *Valentine's Day* "
+      "acts as an intermediate node for those different movies. It could be a similar situation with the movie *New Year's Eve*. It's "
+      "starring Zac Effron, Robert De Niro, Hilary Swank, Michelle Pfeiffer and so on.")
+    st.text("")
+
+    st.write(f"**Eigenvector centrality**")
+    st.text("")
+
+    st.write(f"Definition: Like degree centrality, EigenCentrality measures a node’s influence based on the number of links it has to "
+    "other nodes in the network. EigenCentrality then goes a step further by also taking into account how well connected a node is, and"
+    " how many links their connections have, and so on through the network.")
+    st.write(f" What it tells us: By calculating the extended connections of a node, EigenCentrality can identify nodes with influence over the whole"
+    " network, not just those directly connected to it.")
+    st.text("")
+
+    st.write(f"Again, we see Marvel movies having lots of influence. A movie we haven't seen before is *Iron Man 2*, which is interesting. "
+    " This is one of the earlier Marvel movies starring Robert Downey Jr., Don Cheadle, Mickey Rourke, Samuel L. Jackson, Scarlett Johansson"
+    " and so on. ")
+
+def additional_statistics():
+    # Returns the average degree of the neighborhood of each node.
+    stats = nx.average_neighbor_degree(FILM_NETWORK)
+
+    st.write(f"Movies with the highest average neighbour degree")
+
+    st.write(sorted(stats, key=stats.get, reverse=True)[:5])
