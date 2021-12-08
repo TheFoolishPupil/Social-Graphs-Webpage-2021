@@ -277,6 +277,18 @@ def sentiment_analysis():
     st.plotly_chart(neutral_sentiment_genre_plot)
     "Again, all of the movies have high values of neutrality, no matter the genre. It seems like there are no patterns or exceptions."
 
+    "**Sentiment analysis summary**"
+
+    "First of all, the compound scores were very extreme (mostly -1 and many equal to 1) and the neutrality scores were high for all of the movies. This could indicate that the text was written in a very neutral manner. This would make sense since the text is from Wikipedia. This high level of neutrality might make it difficult for VADER to compute more diverse compound scores. We also saw that the scores of negativity or positivty were also relatively small. However, some tendencies were caught."
+
+    "**Box office group analysis**"
+
+    "It seemed that the lower the box office value the bigger the neutrality values were. This could mean two things. Either, the lesser/less succesful movies were described in a more neutral manner or they actually have plots that are more neutral. On top of that, it seemed that the higher the box office value was the bigger negative and/or positive scores it had. It goes in line with the tendency of neutrality values. Higher box office movies could either be written about in a more emotional manner since it has more fans/critics. Or the movie itself has more emotion indicating things in the plot."
+
+    "**Genre analysis**"
+
+    "Regarding genres, the neutrality scores were still relatively big and similar through out all genres. However, genres like mystery, sci-fi, thriller, horror and romance stood out. The first four showed higher negativity scores and lower positivity scores. This makes complete sense, it is hard to imagine a horror or mystery movie showcasing positivity. It carries the opposite purpose. It is similar for romantic movies. Even though romantic movies can have bitersweet moments or endings it usually has a fairly positive and uplifting storyline. These movies are for dreaming and this requires positivity."
+
 
 def main():
     """Entry point for the application."""
