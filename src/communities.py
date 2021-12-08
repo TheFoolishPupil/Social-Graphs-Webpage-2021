@@ -38,6 +38,24 @@ for com in communities:
         temp_degree_dict, key=temp_degree_dict.get, reverse=True
     )[:3]
 
+def render_community_text():
+    st.write(f"# Movie Community Detection")
+    st.text("")
+
+    st.write(f"Each time the Louvain Algorithm runs, it returns a different community partition."
+    " However, throughout executions it was interesting seeing that the communities "
+    " formed included movies from the same series or similar genres. This makes sense, "
+    " since our network is build based on movies that share actors and it is probable "
+    " that actors will continue playing in movie sequels or will be cast to play in "
+    " the same genre.")
+    st.text("")
+
+    st.write(f"*Community 1* includes action movies like **Fast and the Furious, The Expendables, Transformers**")
+    st.write(f"*Community 2* includes animation movies like **Kung Fu Panda, Cars, Despicable Me** ")
+    st.write(f"*Community 3* includes fantasy movies like **Harry Potter** and **Pirates of the Carribean**")
+    st.write(f"*Community 4* includes fantasy, adventure movies like **Lord of the Rings** and **Star Wars**")
+    st.write(f"*Community 5* includes superheroe movie series like **Avengers, Captain America, Iron Man, Spider Man**")
+
 @st.cache
 def community_box_office_histogram():
     """Returns a figure object of box office histograms for each community."""

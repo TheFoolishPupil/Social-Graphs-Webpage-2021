@@ -18,6 +18,7 @@ from communities import (
     community_size_distribution_graph,
     community_box_office_histogram,
     community_box_office_barchart,
+    render_community_text
 )
 from sentiment import (
     plot_sentiment_scores_by_box_office_group,
@@ -117,20 +118,9 @@ def word_clouds():
 
 
 def communities():
-    "# Movie Community Detection"
 
-    "Each time the Louvain Algorithm runs, it returns a different community partition."
-    " However, throughout executions it was interesting seeing that the communities "
-    " formed included movies from the same series or similar genres. This makes sense, "
-    " since our network is build based on movies that share actors and it is probable "
-    " that actors will continue playing in movie sequels or will be cast to play in "
-    " the same genre."
+    render_community_text()
 
-    "*Community 1* includes action movies like **Fast and the Furious, The Expendables, Transformers**"
-    "*Community 2* includes animation movies like **Kung Fu Panda, Cars, Despicable Me** "
-    "*Community 3* includes fantasy movies like **Harry Potter** and **Pirates of the Carribean**"
-    "*Community 4* includes fantasy, adventure movies like **Lord of the Rings** and **Star Wars**"
-    "*Community 5* includes superheroe movie series like **Avengers, Captain America, Iron Man, Spider Man**"
 
     csd_graph = community_size_distribution_graph()
     st.plotly_chart(csd_graph)
