@@ -37,6 +37,14 @@ from sentiment import (
     plot_compound_scores,
 )
 
+st.set_page_config(
+    page_title="Most amazing project ever",
+    page_icon="🍿",
+    layout="wide",
+    initial_sidebar_state="auto",
+    menu_items=None,
+)
+
 
 def introduction():
     """Defines what will be shown on our introduction page."""
