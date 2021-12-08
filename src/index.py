@@ -238,12 +238,19 @@ def sentiment_analysis():
 
     st.write("")
     st.plotly_chart(positive_sentiment_plot)
+    "In the above graphs there's also no obvious pattern. It seems that the higher the box office the more the higher positive score it has. But this is barely noticable."
     st.plotly_chart(negative_sentiment_plot)
+    "It's seems that there's no pattern appearing here. Perhaps the very high box office movies have a slighly higher negative rating."
     st.plotly_chart(neutral_sentiment_plot)
+    "Here we have the neutrality scores for different box office groups. All of the groups have high neutrality scores and there's not much difference. It seems like the neutrality value is reducing the higher the box office value is."
     st.plotly_chart(compound_plot)
+    "Above we have the compound scores for all of the movies. It can be seen that the values are very extreme with the majority being around -1 and 1. A huge amount of the movies are at -1. "
     st.plotly_chart(positive_sentiment_genre_plot)
+    "The postivity values for the different genres has some more differences. It seems like mystery, sci-fi and thriller have lower positivity scores. It makes sense since they also had higher negativity scores. The logic is similar for romatinc films, which have higher positivity scores compared to the other genres. What also pops out here, is that horror movies have small positivity values (where as the negativity scores didn't stand out)."
     st.plotly_chart(negative_sentiment_genre_plot)
+    "In the plot above the negativity scores for different genres are shown. The values are quite similar. Perhaps mystery, sci-fi and thriller have slighly higher negativity scores than the rest. It also seems, that romance has lower negativity scores than the other genres and it's quite noticable."
     st.plotly_chart(neutral_sentiment_genre_plot)
+    "Again, all of the movies have high values of neutrality, no matter the genre. It seems like there are no patterns or exceptions."
 
 
 def main():
