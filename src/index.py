@@ -9,7 +9,7 @@ from network import (
     render_actor_distribution_text,
     render_movie_distribution_text,
     render_box_office_distribution_text,
-    render_genre_distribution_text
+    render_genre_distribution_text,
 )
 from wordclouds import (
     render_word_clouds,
@@ -117,6 +117,26 @@ def network_visualization():
 
     "# Network Analysis"
 
+    "## Visualizations"
+
+    (
+        "Below you can see visualations of each of ther networks. For the movie"
+        " network colors have been assigned to any communities that are larger"
+        " than 50 films. The actor network is particularly interesting to look"
+        " at when considering the connected componenets that can be found along"
+        " the edge of the visualization. These connected componenets correspond"
+        " to films as all actors within a film will have a and edge between eachother."
+        " Futhermore, it is very interesting to note that there are some connected"
+        " components that are not connected to any one but themselves. These represent"
+        " films where actors have not starred in any box office hit other than that one."
+    )
+
+    col1, col2 = st.columns(2)
+
+    col1.image("img/movie_network.png")
+
+    col2.image("img/actor_network.png")
+
     "## Degree Distributions"
     st.plotly_chart(network_degree_distribution(type="film"))
     render_movie_distribution_text()
@@ -176,11 +196,13 @@ def communities():
     csd_graph = community_size_distribution_graph()
     st.plotly_chart(csd_graph)
 
-    "**Do larger communities make a bigger box office hit?**"
-    " From the following plot we can see that the top 5 largest communities (orange bars) "
-    " are also getting a quite high box office revenue. This indicates that larger communities"
-    " tend to have more popular and thus more profitable movies. Considering the largest"
-    " communities include a lot of famous movie series this is reasonable."
+    (
+        "**Do larger communities make a bigger box office hit?**"
+        " From the following plot we can see that the top 5 largest communities (orange bars) "
+        " are also getting a quite high box office revenue. This indicates that larger communities"
+        " tend to have more popular and thus more profitable movies. Considering the largest"
+        " communities include a lot of famous movie series this is reasonable."
+    )
 
     cbo_barchart = community_box_office_barchart()
     st.plotly_chart(cbo_barchart)
