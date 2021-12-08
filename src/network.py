@@ -129,7 +129,9 @@ def network_degree_distribution_by_community():
             b = (counter % 2) + 1
             a = (counter // 2) + 1
             hist, bins = np.histogram(degree_distribution, bins=30)
-            fig.add_trace(go.Bar(x=bins[:-1], y=hist, name=community), a, b)
+            fig.add_trace(
+                go.Bar(x=bins[:-1], y=hist, name=str(community), dx=a, dy=b)
+            )
             counter += 1
 
     fig.update_xaxes(title_text="Degree", row=a, col=1)
