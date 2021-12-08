@@ -15,7 +15,7 @@ from network import (
     degree_centrality,
     render_degree_centrality_text,
     top_movies_degree_centrality,
-    additional_statistics
+    additional_statistics,
 )
 from wordclouds import (
     render_word_clouds,
@@ -79,9 +79,6 @@ def introduction():
 
 def data_analysis():
     """Defines what should be shown on the data analysis page."""
-
-    # Sidebar content
-    st.sidebar.write("## Parameters")
 
     # Page content
     "# Data Analysis"
@@ -171,6 +168,8 @@ def network_visualization():
 
     "## Additional Statistics"
     additional_statistics()
+
+
 def word_clouds():
     """Defines what should be shown on the natural language processing page."""
 
