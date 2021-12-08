@@ -83,9 +83,6 @@ def introduction():
 def data_analysis():
     """Defines what should be shown on the data analysis page."""
 
-    # Sidebar content
-    st.sidebar.write("## Parameters")
-
     # Page content
     "# Data Analysis"
     "## Data Set"
@@ -174,11 +171,15 @@ def network_visualization():
 
     "## Additional Statistics"
     additional_statistics()
+<<<<<<< HEAD
     additional_statistics_text()
 
     "### Comparison with the ER Network"
     st.write(er_comparison())
     render_er_comparsion_text()
+=======
+
+>>>>>>> 039bbb793008464eb2551f01d0d745a9f2bd6fe1
 
 def word_clouds():
     """Defines what should be shown on the natural language processing page."""
@@ -300,6 +301,8 @@ def main():
         data=FILM_DATA.to_csv().encode("utf-8"),
         file_name="movie_dataset.csv",
     )
+    link = "[Notebook](https://colab.research.google.com/drive/1kB3vDGY3Js_ex5OzXbJN9jb7qjJTkaoM?usp=sharing)"
+    st.sidebar.markdown(link, unsafe_allow_html=True)
     if page == "Introduction":
         introduction()
 
