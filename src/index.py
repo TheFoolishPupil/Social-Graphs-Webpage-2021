@@ -38,7 +38,7 @@ from sentiment import (
 )
 
 st.set_page_config(
-    page_title="Most amazing project ever",
+    page_title="Box Office Films",
     page_icon="🍿",
     layout="wide",
     initial_sidebar_state="auto",
@@ -50,6 +50,12 @@ def introduction():
     """Defines what will be shown on our introduction page."""
 
     "# Top Box Office Films"
+
+    st.markdown(
+        '<iframe width="560" height="315" src="https://www.youtube.com/embed/AfEo-Qfx5hs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+        unsafe_allow_html=True,
+    )
+
     "## Introduction"
     (
         "This website is set on presenting the insights gained from carrying"
