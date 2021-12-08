@@ -173,7 +173,6 @@ def network_visualization():
     additional_statistics()
     additional_statistics_text()
 
-    "### Comparison with the ER Network"
     st.write(er_comparison())
     render_er_comparsion_text()
 
