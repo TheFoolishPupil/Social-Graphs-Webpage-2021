@@ -8,7 +8,6 @@ from constants import FILM_DATA, FILM_NETWORK_COMMUNITY
 
 
 partition = community_louvain.best_partition(FILM_NETWORK_COMMUNITY)
-print("COMMMS!")
 communities = {}
 for key, value in sorted(partition.items()):
     communities.setdefault(value, []).append(key)
@@ -38,7 +37,6 @@ for com in communities:
     community_names[com] = sorted(
         temp_degree_dict, key=temp_degree_dict.get, reverse=True
     )[:3]
-
 
 @st.cache
 def community_box_office_histogram():
@@ -76,7 +74,7 @@ def community_box_office_barchart():
                     ]
                 )
             except IndexError as e:
-                print(e)
+                print("Could not load ", title, e)
 
         box_office_sums[index] = box_office_sum / len(values)
 

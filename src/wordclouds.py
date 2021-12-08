@@ -1,5 +1,16 @@
 import streamlit as st
+from constants import GENRE_TF_IDF_DATA
 
+def render_genre_tf_idf():
+    st.text("")
+    st.write(f"### Top 10 words according to TF:")
+    for index, row in GENRE_TF_IDF_DATA.head(5).iterrows():
+        st.write(f"**{row.Genre}** : {row.Top_10_TF}")
+
+    st.text("")
+    st.write(f"**### Top 10 words according to TF_IDF:**")
+    for index, row in GENRE_TF_IDF_DATA.head(5).iterrows():
+        st.write(f"**{row.Genre}** : {row.Top_10_TF_IDF}")
 
 def render_word_clouds():
     """Renders wordclouds on the page."""

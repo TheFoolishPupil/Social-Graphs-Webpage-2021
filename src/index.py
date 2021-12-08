@@ -1,6 +1,6 @@
 import streamlit as st
 from constants import (
-    FILM_DATA,
+    FILM_DATA
 )
 from data import average_number_of, box_office_histogram
 from network import (
@@ -9,7 +9,10 @@ from network import (
     network_degree_distribution_by_genre,
     network_degree_distribution_by_community,
 )
-from wordclouds import render_word_clouds
+from wordclouds import (
+    render_word_clouds,
+    render_genre_tf_idf
+)
 from communities import (
     community_size_distribution_graph,
     community_box_office_histogram,
@@ -74,52 +77,82 @@ def network_visualization():
     st.plotly_chart(network_degree_distribution_by_community())
 
 
-def word_clouds_and_communities():
+def word_clouds():
     """Defines what should be shown on the natural language processing page."""
 
-    "# Word Clouds for Genres"
+    '# Text analysis of movie plots'
 
-    "## Word Clouds for Genres"
+    '## Genre Most Popular Words'
+    "By analyzing movie plots per genre, we are interested in seeing whether genres"
+    " share any words, as well as what words make a genre unique. To do that we "
+    " calculate the top frequent words in each genre (TF value) but also the top "
+    " relevant words in each genre (TF-IDF value)."
+
+    render_genre_tf_idf()
+    (
+        "As we can see there is a significant difference between TF and TF-IDF values."
+        " TF (term frequency) gives us words that are often used in a document. In our "
+        " dataset, for example, we can see that words like **kill, find, leave, attack,**"
+        " **help, return** are appearing very often. This makes sense, since these are "
+        " verbs that can generally describe a plot. However, these words are not very "
+        " descriptive of the genres."
+
+        "The IDF (inverse document frequency) of a word gives us the measure of how"
+        " significant that term is between all genres because it takes into account "
+        " the number of genres containing a term. Therefore, it mainly returns "
+        " protagonist nameslike **katniss, voldemort, shrek, zuckerberg, gandalf** "
+        " which help us get a better sense of a genre's movies."
+
+        "Ideally, when using TF-IDF, we would want to get words that describe a genre"
+        " more accurately, without seeing character names. Since we were unable to"
+        " remove these names for more than 700 movies, they now dominate the dataset's"
+        " top words."
+    )
+
+    "## Genre Word Clouds"
     render_word_clouds()
     (
-        "From the generated wordclouds we can see that almost all genres are"
-        " mostly described by the name of their characters. This makes sense"
-        " since movie plots describe the storyline of each character. We also"
-        " see genres sharing character names, since movies can belong to"
-        " multiple genres. A few examples are:"
+        "From the generated wordclouds we can see that almost all genres are mostly "
+        "described by the name of their characters, same way as before. Again, we "
+        "would ideally want names to be filtered out so that we could comment on the"
+        " language used in different genres. This wasn't practically feasible so we "
+        "need to interperet the wordclouds differently. Instead of telling us about "
+        "the general language used in a particular genre, the wordclouds tell us, "
+        "through the character names, which film titles are the most popular in a "
+        "genre and have become cult favorites."
+
+
+        "- **Shrek** has become a very popular movie and has attained a cultural "
+        "   status. This can be seen from our worldclouds, since Shrek is one of the"
+        "   top words in genres *Romance, Family, Animation, Fantasy*"
+
+        "- **Katniss** is also a very prevelant character name throughout our wordclouds."
+        "   This also makes sense, since Katniss is the protagonist of the *Hunger Games*"
+        "   series which consists of four movies and had a large fanbase."
+
+        "- Same goes for **Bella** and **Edward**, the main characters of the *Twilight* "
+        "  *series* but also **Stark, Thor, Logan** from the *Avenges* and **Frodo, Gandalf**"
+        "   from *The Lord of the Rings*. It seems movie series have a great influence over"
+        "   our wordclouds."
+
+        "- Since **Jackass** is the only movie in the *Documentary* category we get"
+        " a wordcloud only from its own plot. This is why we have more non-character"
+        " words in this wordcloud."
+
     )
-    "**Action** : Bourne, Katniss, Logan, agent, avenger"
-    "**Adventure** : Maleficent, Voldemort, Gandalf"
-    "**Animation** : Shrek, McQueen, Simba"
-    "**Biography** : Freddie, Zuckerberg, Harvard"
-    "**Comedy** : Stiffler, Borat"
-    "**Crime** : Clouseau, britt, bank, gangster"
-    "**Documentary** : Since Jackass is the only movie in this category we have words like knoxville, butt, skateboard"
-    "**Drama** : Bella, Frodo, Simba"
-    "**Family** : Simba, Maleficent, Shrek, hiccup"
-    "**Fantasy** : Maleficent, Shrek, Aladdin, Dumbledore"
-    "**History** : Agamemnon, greek, Achilles, briseis, trojan"
-    "**Horror** : Samara, creeper, Leatherface, exorcism, creature"
-    "**Music** : Freddie, Farrokh, elgin"
-    "**Musical** : Giselle, Elsa, Aladdin"
-    "**Mystery** : Moriarty, Holmes, Bourne"
-    "**Romance** : Bella, Shrek, Edward"
-    "**Sci-Fi** : Optimus, Godzilla, Stark, Thanos"
-    "**Sport** : gym, coach, lap, chick"
-    "**Thriller** : Lecter, Bourne, Katniss"
-    "**War** : Schofield, tugg, savannah, german"
-    "**Western** : cogburn, fitzgerald, outlaws"
 
-    "## Community Detection"
 
-    "### Community Analysis"
 
-    (
-        "It's interesting seeing that many communities include movies from the"
-        " same movie series or similar movie genres. This makes sense, since"
-        " it is probable that actors will continue playing in movie sequels or"
-        " will be cast to play in the same genre. For example:"
-    )
+def communities():
+    "# Movie Community Detection"
+
+    "Each time the Louvain Algorithm runs, it returns a different community partition."
+    " However, throughout executions it was interesting seeing that the communities "
+    " formed included movies from the same series or similar genres. This makes sense, "
+    " since our network is build based on movies that share actors and it is probable "
+    " that actors will continue playing in movie sequels or will be cast to play in "
+    " the same genre."
+
     "*Community 1* includes action movies like **Fast and the Furious, The Expendables, Transformers**"
     "*Community 2* includes animation movies like **Kung Fu Panda, Cars, Despicable Me** "
     "*Community 3* includes fantasy movies like **Harry Potter** and **Pirates of the Carribean**"
@@ -129,12 +162,17 @@ def word_clouds_and_communities():
     csd_graph = community_size_distribution_graph()
     st.plotly_chart(csd_graph)
 
+    "**Do larger communities make a bigger box office hit?**"
+    " From the following plot we can see that the top 5 largest communities (orange bars) "
+    " are also getting a quite high box office revenue. This indicates that larger communities"
+    " tend to have more popular and thus more profitable movies. Considering the largest"
+    " communities include a lot of famous movie series this is reasonable."
+
     cbo_barchart = community_box_office_barchart()
     st.plotly_chart(cbo_barchart)
 
-    cbo_histogram = community_box_office_histogram()
-    st.plotly_chart(cbo_histogram)
-
+    # cbo_histogram = community_box_office_histogram()
+    # st.plotly_chart(cbo_histogram)
 
 def sentiment_analysis():
     """Defines what should be shown on the sentiment analysis page."""
@@ -180,8 +218,9 @@ def main():
         [
             "Data Analysis",
             "Network Visualization",
-            "Word Clouds & Communities",
-            "Sentiment Analysis",
+            "Text Analysis",
+            "Communities Analysis",
+            "Sentiment Analysis"
         ],
     )
     st.sidebar.download_button(
@@ -195,8 +234,11 @@ def main():
     if page == "Network Visualization":
         network_visualization()
 
-    if page == "Word Clouds & Communities":
-        word_clouds_and_communities()
+    if page == "Text Analysis":
+        word_clouds()
+
+    if page == "Communities Analysis":
+        communities()
 
     if page == "Sentiment Analysis":
         sentiment_analysis()

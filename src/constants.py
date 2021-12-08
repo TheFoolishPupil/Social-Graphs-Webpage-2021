@@ -13,6 +13,8 @@ with open("data/actor_network", "rb") as f:
 
 FILM_DATA = pd.read_csv("data/dataset.csv").iloc[:, 1:]
 
+GENRE_TF_IDF_DATA = pd.read_csv("data/genres_tf_idf.csv").iloc[:, 1:]
+
 BOX_OFFICE_GROUPS = [
     "very low box office",
     "low box office",
