@@ -18,7 +18,7 @@ from network import (
     additional_statistics,
     er_comparison,
     render_er_comparsion_text,
-    additional_statistics_text
+    additional_statistics_text,
 )
 from wordclouds import (
     render_word_clouds,
@@ -171,15 +171,12 @@ def network_visualization():
 
     "## Additional Statistics"
     additional_statistics()
-<<<<<<< HEAD
     additional_statistics_text()
 
     "### Comparison with the ER Network"
     st.write(er_comparison())
     render_er_comparsion_text()
-=======
 
->>>>>>> 039bbb793008464eb2551f01d0d745a9f2bd6fe1
 
 def word_clouds():
     """Defines what should be shown on the natural language processing page."""
