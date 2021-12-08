@@ -15,7 +15,10 @@ from network import (
     degree_centrality,
     render_degree_centrality_text,
     top_movies_degree_centrality,
-    additional_statistics
+    additional_statistics,
+    er_comparison,
+    render_er_comparsion_text,
+    additional_statistics_text
 )
 from wordclouds import (
     render_word_clouds,
@@ -171,6 +174,12 @@ def network_visualization():
 
     "## Additional Statistics"
     additional_statistics()
+    additional_statistics_text()
+
+    "### Comparison with the ER Network"
+    st.write(er_comparison())
+    render_er_comparsion_text()
+
 def word_clouds():
     """Defines what should be shown on the natural language processing page."""
 
@@ -279,7 +288,7 @@ def main():
         "Sections",
         [
             "Introduction",
-            "Data Analysis",
+            "Basic Stats",
             "Network Analysis",
             "Text Analysis",
             "Communities Analysis",
@@ -294,7 +303,7 @@ def main():
     if page == "Introduction":
         introduction()
 
-    if page == "Data Analysis":
+    if page == "Basic Stats":
         data_analysis()
 
     if page == "Network Analysis":

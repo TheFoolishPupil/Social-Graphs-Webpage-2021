@@ -405,3 +405,82 @@ def additional_statistics():
     st.write(f"Movies with the highest average neighbour degree")
 
     st.write(sorted(stats, key=stats.get, reverse=True)[:5])
+
+def er_comparison():
+    #Extracting the biggest component from the movie graph to compute some of the statistics
+    degree_distribution = [FILM_NETWORK.degree(n) for n in FILM_NETWORK.nodes()]
+    avg_k = sum(degree_distribution)/len(degree_distribution)
+    p = avg_k/(len(list(FILM_NETWORK.nodes())))
+    ER = nx.gnp_random_graph(713,p)
+    Gcc = sorted(nx.connected_components(FILM_NETWORK), key=len, reverse=True)
+    H_gcc = FILM_NETWORK.subgraph(Gcc[0])
+
+    Gcc = sorted(nx.connected_components(ER), key=len, reverse=True)
+    ER_gcc = ER.subgraph(Gcc[0])
+
+    avg_shortest_path = nx.average_shortest_path_length(H_gcc)
+    avg_clustering = nx.average_clustering(FILM_NETWORK)
+    movies_avg_clustering = nx.average_clustering(FILM_NETWORK)
+    gcc_avg_clustering = nx.average_clustering(H_gcc)
+
+    ER_avg_shortest_path = nx.average_shortest_path_length(ER_gcc)
+    ER_avg_clustering = nx.average_clustering(ER)
+    ER_movies_avg_clustering = nx.average_clustering(ER)
+    ER_gcc_avg_clustering = nx.average_clustering(ER_gcc)
+
+
+    df_other_statistics = pd.DataFrame()
+    statistics = [
+        "Network assortativity",
+        "Box Office Groups assortativity",
+        "Community assortativity",
+        "GCC Average Shortest Path",
+        "Average Clustering"
+    ]
+
+    values = [
+        nx.degree_assortativity_coefficient(FILM_NETWORK),
+        nx.attribute_assortativity_coefficient(FILM_NETWORK,'bo_group'),
+        nx.attribute_assortativity_coefficient(FILM_NETWORK,'community'),
+        avg_shortest_path,
+        gcc_avg_clustering
+    ]
+    er_values = [
+        nx.degree_assortativity_coefficient(ER),
+        np.nan,
+        np.nan,
+        ER_avg_shortest_path,
+        ER_gcc_avg_clustering
+    ]
+
+    df_other_statistics['Metric'] = statistics
+    df_other_statistics['MN Value'] = values
+    df_other_statistics['ER Value'] = er_values
+
+    return df_other_statistics
+
+def render_er_comparsion_text():
+    st.write(f"Here we compare some of the statistics to that of the ER network. This is because we wanted to share some"
+    " reference point and the Erdős-Rényi network had the most similar degree distribution. Note, it is just for reference"
+    " and no additional assumptions are made because of this.")
+
+    st.write(f"The movie network has a degree assortativity of ~0.17. The value is quite close to 0, but it does indicate "
+    "a small tendancy for nodes of similar degrees to have connections. This could be in the form of Marvel movies having"
+    " connections between each other.")
+
+    st.write(f"Both box office assortativity and community assortativity have quite small values, which indicates that "
+    "there's no relation between nodes of similar degree.")
+
+    st.write(f"GCC Average Shortest Path is the value for the giant connected compenent. This value shows how diverse the "
+    "casting is/how compact the network is.")
+
+    st.write(f"The average clustering coefficient is ~0.35. This value indicates how densely connected the network is. It "
+    "seems that the value is quite high, especially since it's expected for real world networks to be rather sparse.")
+
+def additional_statistics_text():
+    st.write(f"The nodes of the 5 movies above have the highest average neighbour degree"
+    "values. So they connect to nodes that have very high degree. So these movies"
+    "might have casted some actors that are a part of other very influental movies."
+    "The actors could be: Scarlett Johansson, Samuel L. Jackson and Chris Evans. "
+    "Actually all of these actors were casted by Marvel which might be a big influence"
+    "in this statistic.")
